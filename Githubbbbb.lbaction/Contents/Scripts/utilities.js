@@ -7,7 +7,7 @@ const ICONS = {
     'COMMIT': 'font-awesome:code',
     'COMMITS': 'font-awesome:list-alt',
     'HASH': 'font-awesome:hashtag',
-    'LINK': 'font-awesome:external-link-alt',
+    'LINK': 'font-awesome:fa-external-link',
     'INFO': 'font-awesome:info-circle',
     'BRANCH': 'font-awesome:sitemap',
     'CODE': 'font-awesome:code',

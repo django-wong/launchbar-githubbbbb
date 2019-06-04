@@ -50,6 +50,10 @@ function formatRepoDetail(repo) {
 	};
 
 	return [{
+		title: 'Open In Browser',
+		icon: ICONS.LINK,
+		url: repo.html_url
+	},{
 		title: 'View Commits',
 		icon: ICONS.CODE,
 		action: 'showCommitsOfRepo',
