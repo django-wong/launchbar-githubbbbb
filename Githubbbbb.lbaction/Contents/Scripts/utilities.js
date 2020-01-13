@@ -1,3 +1,5 @@
+const THROTTLE_FILE = Action.cachePath + 'throttle';
+
 const ICONS = {
     'SUCCESSFUL': 'font-awesome:check',
     'FAILED': 'font-awesome:times',
@@ -31,7 +33,6 @@ const ICONS = {
 
 const HOST = "https://api.github.com"
 
-
 /**
  * Format a date string to relative date
  *
@@ -43,7 +44,6 @@ function fd(date) {
         relativeDateFormatting: true
     });
 }
-
 
 /**
  * Try parse a JSON string, or return the fallback value
@@ -130,7 +130,13 @@ function increasePage(options) {
     return Object.assign({}, options, {page: (options.page || 1) + 1});
 }
 
-
+/**
+ * Return an item that just to next page
+ *
+ * @param      {string}  action   The action to perform
+ * @param      {object}  options  The options pass to the action
+ * @return     {Object}  An list item to next page
+ */
 function nextPage(action, options) {
     return {
         title: 'Next Page',
@@ -141,7 +147,12 @@ function nextPage(action, options) {
     };
 }
 
-
+/**
+ * Determines the response if more data can be fetched
+ *
+ * @param      {object}   response  The response
+ * @return     {boolean}  True if more, False otherwise.
+ */
 function hasMore(response) {
     if (response &&
         response.response &&
@@ -151,4 +162,23 @@ function hasMore(response) {
         return true;
     }
     return false;
+}
+
+
+/**
+ * Wait for given ms and check if can continue to proform things
+ *
+ * @param      {number}  [ms=1000]  The milliseconds
+ * @return     {boolean}
+ */
+function throttle(ms = 1000) {
+    const FILE = Action.cachePath + 'throttle';
+    const time = Date.now();
+    File.writeText(time.toString(), FILE);
+    while (Date.now() - time < ms) {
+        continue;
+    }
+    return time.toString() === File.readText(
+        FILE
+    );
 }

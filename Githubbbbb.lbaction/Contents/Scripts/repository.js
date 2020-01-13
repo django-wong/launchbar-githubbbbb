@@ -52,7 +52,8 @@ function formatRepoDetail(repo) {
 	return [{
 		title: 'Open In Browser',
 		icon: ICONS.LINK,
-		url: repo.html_url
+		url: repo.html_url,
+		label: 'Quick Look <Command + Y>'
 	},{
 		title: 'View Commits',
 		icon: ICONS.CODE,

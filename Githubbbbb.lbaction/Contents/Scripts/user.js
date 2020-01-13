@@ -7,10 +7,12 @@ function addAccount(auth) {
             'Nice!',
             'Cancel'
         );
-        if (answer === 1) {
+
+        if (answer === 0) {
             Action.preferences.users.push([auth, JSON.stringify(result.data)]);
             return useUserProfile({user: result.data, auth});
         }
+
         return [];
     } else {
         LaunchBar.alert('Invalid Certificate');
@@ -18,18 +20,37 @@ function addAccount(auth) {
 }
 
 
+function refreshAccount(auth) {
+    const result = request(`${HOST}/user`, auth);
+    if (result.data && result.data.login) {
+        Action.preferences.users = Action.preferences.users.map((user) => {
+            const [$auth, $data] = user;
+            if ($auth === auth) {
+                return [auth, JSON.stringify(result.data)]
+            }
+            return user;
+        });
+        return result.data;
+    }
+    return null;
+}
+
 
 /**
  * Builds an user information.
  */
 function useUserProfile(args) {
-	const data = args.user;
+	let data = args.user;
 	const auth = Action.preferences.auth = args.auth;
 	const options = {
 		username: data.login,
 		auth: auth,
 		page: 1
 	};
+
+    if (LaunchBar.options.commandKey) {
+        data = refreshAccount(auth) || data;
+    }
 
     return [{
         title: `${data.login}<${data.email}>`,

@@ -24,6 +24,10 @@ function run(argument) {
         return listUsers();
     }
 
+    if (!throttle(300)) {
+        return [];
+    }
+
     argument = argument.trim();
     if (argument === '') {
         return [{

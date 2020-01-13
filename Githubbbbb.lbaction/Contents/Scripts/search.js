@@ -15,6 +15,19 @@ const SEARCHES = [{
     }
 ];
 
+
+/**
+ * Searches for the things
+ *
+ * Usage: `[kind:]keyword?[sort[+-]]`
+ * `kind` can be repo or user
+ * `sort` can be any sorting key listed on Github
+ * `-` stand for DESC
+ * `+` stand for ASC
+ *
+ * @param      {string}  options  The options
+ * @return     {Array}
+ */
 function search(options) {
     if (options.text.toString().indexOf(':') === -1) {
         options.text = 'repo:' + options.text;
@@ -35,6 +48,7 @@ function search(options) {
         page: `${options.page || 1}`,
         per_page: 20
     };
+
     if (sort) {
         body.sort = sort;
         if (order) {
@@ -46,25 +60,31 @@ function search(options) {
 
     if (!response.data || !response.data.items) {
         return [{
-            title: 'No Result'
-        }].concat(dump(response));
+            title: `No Result was found for ${pattern}`
+        }];
     }
 
     const items = response.data.items.map((item) => {
         let result;
         switch (search.abbr[0]) {
-			case 'commit':
-				return formatCommitInfo(item);
-			case 'issue':
-				return formatIssueInfo(item);
-			case 'repo':
-				return formatRepoInfo(item);
-			case 'user':
-				return formatUserInfo(item);
-			default:
-			return null;
+            case 'commit':
+                return formatCommitInfo(item);
+            case 'issue':
+                return formatIssueInfo(item);
+            case 'repo':
+                return formatRepoInfo(item);
+            case 'user':
+                return formatUserInfo(item);
+            default:
+                return dump(result)[0];
         }
     }).filter((item) => !!item);
+
+    if (items.length === 0) {
+        return [{
+            title: 'No data was found.'
+        }];
+    }
 
     if (hasMore(response)) {
         items.push(nextPage('search', options));
