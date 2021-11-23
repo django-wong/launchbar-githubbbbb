@@ -36,8 +36,16 @@ function run(argument) {
         }];
     }
 
-    if (argument.match(/.{1,}\|[a-z0-9]{10,}/)) {
-        return addAccount(argument.replace('|', ':'));
+    if (argument.match(/.{1,}\|[a-zA-Z0-9_]{10,}/)) {
+        return [
+            {
+                title: `Add ${argument.split('|')[0]}`,
+                action: 'addAccount',
+                actionArgument: argument.replace('|', ':'),
+                actionReturnsItems: true,
+                icon: 'font-awesome:fa-user-plus'
+            }
+        ]
     }
 
     if (argument === '?') {
